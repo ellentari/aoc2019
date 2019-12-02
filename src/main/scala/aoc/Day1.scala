@@ -4,15 +4,16 @@ import scala.annotation.tailrec
 
 object Day1 extends App {
 
-  def part1(input: List[String]): Int =
+  def parseInput(lines: List[String]): List[Int] =
+    lines.map(_.toInt)
+
+  def part1(input: List[Int]): Int =
     input
-      .map(_.toInt)
       .map(requiredFuel)
       .sum
 
-  def part2(input: List[String]): Int =
+  def part2(input: List[Int]): Int =
     input
-      .map(_.toInt)
       .map(requiredFuelRec)
       .sum
 
@@ -30,7 +31,9 @@ object Day1 extends App {
     loop(0, mass)
   }
 
-  println(part1(Resources.lines("day1.txt")))
-  println(part2(Resources.lines("day1.txt")))
+  private val input = parseInput(Resources.lines("day1.txt"))
+
+  println(part1(input))
+  println(part2(input))
 
 }
