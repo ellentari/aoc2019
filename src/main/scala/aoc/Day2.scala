@@ -1,7 +1,6 @@
 package aoc
 
 import scala.annotation.tailrec
-import scala.util.Try
 
 object Day2 extends App {
 
@@ -30,14 +29,13 @@ object Day2 extends App {
   def run(initialMemory: Memory, noun: Int, verb: Int): Int = {
 
     def getInstruction(memory: Memory, pointer: Address): Option[(Instruction, Address)] = {
-      def params =
-        (for {
-          p1 <- Try(memory(pointer + 1))
-          p2 <- Try(memory(pointer + 2))
-          p3 <- Try(memory(pointer + 3))
-        } yield Params(p1, p2, p3)).toOption
+      def params = for {
+        p1 <- memory.lift(pointer + 1)
+        p2 <- memory.lift(pointer + 2)
+        p3 <- memory.lift(pointer + 3)
+      } yield Params(p1, p2, p3)
 
-      Try(memory(pointer)).toOption
+      memory.lift(pointer)
         .map(opCode => (Instruction(opCode, params), pointer + 4))
     }
 
