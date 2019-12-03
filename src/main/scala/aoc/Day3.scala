@@ -1,7 +1,5 @@
 package aoc
 
-import scala.annotation.tailrec
-
 object Day3 extends App {
 
   sealed trait Direction
@@ -21,12 +19,12 @@ object Day3 extends App {
     val down  = "D(\\d+)".r
 
     def parseMoves(path: String) =
-      (path.split(",") map {
+      path.split(",").map {
         case right(d) => Move(d.toInt, Right)
         case left(d)  => Move(d.toInt, Left)
         case up(d)    => Move(d.toInt, Up)
         case down(d)  => Move(d.toInt, Down)
-      }).toList
+      }.toList
 
     input match {
       case first :: second :: Nil =>
@@ -65,59 +63,47 @@ object Day3 extends App {
   def distance(p1: Point, p2: Point): Int =
     (p2.x - p1.x).abs + (p2.y - p1.y).abs
 
-  def part1(input: List[String]): Int = {
+  def part1(path1: List[Move], path2: List[Move]): Int = {
 
-    def makeMoves(moves: List[Move]): Set[Point] = {
-      @tailrec
-      def loop(current: Point, moves: List[Move], acc: Set[Point]): Set[Point] = moves match {
-        case Nil => acc
-        case move :: rest =>
-          val (next, visited) = makeMove(current, move)
+    def makeMoves(path: List[Move]): Set[Point] = {
+      path.foldLeft((Point(0, 0), Set.empty[Point])) {
+        case ((current, seen), move) =>
+          val (next, newSeen) = makeMove(current, move)
 
-          loop(next, rest, acc ++ visited)
-      }
-
-      loop(Point(0, 0), moves, Set())
+          (next, seen ++ newSeen)
+      }._2
     }
 
-    val (moves1, moves2) = parse(input)
-
-    val visited1 = makeMoves(moves1)
-    val visited2 = makeMoves(moves2)
+    val visited1 = makeMoves(path1)
+    val visited2 = makeMoves(path2)
 
     val intersection = (visited1 intersect visited2) - Point(0, 0)
 
     intersection.map(distance(Point(0, 0), _)).min
   }
 
-  def part2(input: List[String]): Int = {
+  def part2(path1: List[Move], path2: List[Move]): Int = {
 
-    def makeMoves(moves: List[Move]): Map[Point, Int] = {
-      @tailrec
-      def loop(current: Point, steps: Int, path: List[Move], acc: Map[Point, Int]): Map[Point, Int] = path match {
-        case Nil => acc
-        case move :: rest =>
-          val (next, visited) = makeMove(current, move)
-          val withSteps       = visited withFilter (!acc.contains(_)) map (p => (p, steps + distance(p, current)))
+    def makeMoves(path: List[Move]): Map[Point, Int] = {
+      path.foldLeft((Point(0, 0), 0, Map.empty[Point, Int])) {
+        case ((current, steps, seen), move) =>
+          val (next, newSeen) = makeMove(current, move)
+          val withSteps = newSeen.withFilter(!seen.contains(_)).map(p => (p, steps + distance(p, current)))
 
-          loop(next, steps + move.d, rest, acc ++ withSteps)
-      }
-
-      loop(Point(0, 0), 0, moves, Map())
+          (next, steps + move.d, seen ++ withSteps)
+      }._3
     }
 
-    val (moves1, moves2) = parse(input)
-
-    val visited1 = makeMoves(moves1)
-    val visited2 = makeMoves(moves2)
+    val visited1 = makeMoves(path1)
+    val visited2 = makeMoves(path2)
 
     val intersection = (visited1.keySet intersect visited2.keySet) - Point(0, 0)
 
     intersection.map(p => visited1(p) + visited2(p)).min
   }
 
-  private val input = Resources.lines("day3.txt")
+  private val (path1, path2) = parse(Resources.lines("day3.txt"))
 
-  println(part1(input))
-  println(part2(input))
+  println(part1(path1, path2))
+  println(part2(path1, path2))
 }
