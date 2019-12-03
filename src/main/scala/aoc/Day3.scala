@@ -5,9 +5,9 @@ import scala.annotation.tailrec
 object Day3 extends App {
 
   sealed trait Direction
-  case object Up extends Direction
-  case object Down extends Direction
-  case object Left extends Direction
+  case object Up    extends Direction
+  case object Down  extends Direction
+  case object Left  extends Direction
   case object Right extends Direction
 
   case class Move(d: Int, direction: Direction)
@@ -16,18 +16,17 @@ object Day3 extends App {
 
   def parse(input: List[String]): (List[Move], List[Move]) = {
     val right = "R(\\d+)".r
-    val left = "L(\\d+)".r
-    val up = "U(\\d+)".r
-    val down = "D(\\d+)".r
+    val left  = "L(\\d+)".r
+    val up    = "U(\\d+)".r
+    val down  = "D(\\d+)".r
 
-    def parseMoves(path: String) = {
+    def parseMoves(path: String) =
       (path.split(",") map {
         case right(d) => Move(d.toInt, Right)
-        case left(d) => Move(d.toInt, Left)
-        case up(d) => Move(d.toInt, Up)
-        case down(d) => Move(d.toInt, Down)
+        case left(d)  => Move(d.toInt, Left)
+        case up(d)    => Move(d.toInt, Up)
+        case down(d)  => Move(d.toInt, Down)
       }).toList
-    }
 
     input match {
       case first :: second :: Nil =>
@@ -45,19 +44,19 @@ object Day3 extends App {
 
     move match {
       case Move(d, Up) =>
-        val next = point.copy(y = point.y + d)
+        val next  = point.copy(y = point.y + d)
         val moved = fillY(point.x, point.y, next.y)
         (next, moved)
       case Move(d, Down) =>
-        val next = point.copy(y = point.y - d)
+        val next  = point.copy(y = point.y - d)
         val moved = fillY(point.x, point.y, next.y)
         (next, moved)
       case Move(d, Right) =>
-        val next = point.copy(x = point.x + d)
+        val next  = point.copy(x = point.x + d)
         val moved = fillX(point.y, point.x, next.x)
         (next, moved)
       case Move(d, Left) =>
-        val next = point.copy(x = point.x - d)
+        val next  = point.copy(x = point.x - d)
         val moved = fillX(point.y, point.x, next.x)
         (next, moved)
     }
@@ -69,7 +68,6 @@ object Day3 extends App {
   def part1(input: List[String]): Int = {
 
     def makeMoves(moves: List[Move]): Set[Point] = {
-
       @tailrec
       def loop(current: Point, moves: List[Move], acc: Set[Point]): Set[Point] = moves match {
         case Nil => acc
@@ -95,13 +93,12 @@ object Day3 extends App {
   def part2(input: List[String]): Int = {
 
     def makeMoves(moves: List[Move]): Map[Point, Int] = {
-
       @tailrec
       def loop(current: Point, steps: Int, path: List[Move], acc: Map[Point, Int]): Map[Point, Int] = path match {
         case Nil => acc
         case move :: rest =>
           val (next, visited) = makeMove(current, move)
-          val withSteps = visited withFilter (!acc.contains(_)) map (p => (p, steps + distance(p, current)))
+          val withSteps       = visited withFilter (!acc.contains(_)) map (p => (p, steps + distance(p, current)))
 
           loop(next, steps + move.d, rest, acc ++ withSteps)
       }
@@ -123,5 +120,4 @@ object Day3 extends App {
 
   println(part1(input))
   println(part2(input))
-
 }

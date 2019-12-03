@@ -5,7 +5,7 @@ import scala.annotation.tailrec
 object Day2 extends App {
 
   type Address = Int
-  type Memory = IndexedSeq[Address]
+  type Memory  = IndexedSeq[Address]
 
   case class Params(left: Address, right: Address, result: Address)
   case class Instruction(opCode: Int, params: Option[Params])
@@ -13,9 +13,8 @@ object Day2 extends App {
   def parseInput(s: String): Memory =
     s.split(",").map(_.toInt)
 
-  def part1(input: Memory): Int = {
+  def part1(input: Memory): Int =
     run(input, 12, 2)
-  }
 
   def part2(input: Memory): Int = {
     val (noun, verb) = (for {
@@ -29,13 +28,15 @@ object Day2 extends App {
   def run(initialMemory: Memory, noun: Int, verb: Int): Int = {
 
     def getInstruction(memory: Memory, pointer: Address): Option[(Instruction, Address)] = {
-      def params = for {
-        p1 <- memory.lift(pointer + 1)
-        p2 <- memory.lift(pointer + 2)
-        p3 <- memory.lift(pointer + 3)
-      } yield Params(p1, p2, p3)
+      def params =
+        for {
+          p1 <- memory.lift(pointer + 1)
+          p2 <- memory.lift(pointer + 2)
+          p3 <- memory.lift(pointer + 3)
+        } yield Params(p1, p2, p3)
 
-      memory.lift(pointer)
+      memory
+        .lift(pointer)
         .map(opCode => (Instruction(opCode, params), pointer + 4))
     }
 
@@ -53,7 +54,7 @@ object Day2 extends App {
       case Some((instruction, nextPointer)) =>
         process(memory, instruction) match {
           case Some(nextMemory) => loop(nextMemory, nextPointer)
-          case None => memory
+          case None             => memory
         }
     }
 
@@ -66,5 +67,4 @@ object Day2 extends App {
 
   println(part1(input))
   println(part2(input))
-
 }
