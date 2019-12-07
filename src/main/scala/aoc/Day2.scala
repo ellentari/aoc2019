@@ -1,5 +1,7 @@
 package aoc
 
+import aoc.util.Resources
+
 import scala.annotation.tailrec
 
 object Day2 extends App {

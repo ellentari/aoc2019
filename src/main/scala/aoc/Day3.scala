@@ -1,5 +1,7 @@
 package aoc
 
+import aoc.util.Resources
+
 object Day3 extends App {
 
   sealed trait Direction
