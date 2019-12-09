@@ -44,7 +44,7 @@ object Day7 extends App {
         case Block => Continue
       }
 
-      (output.headOption, amplifier.copy(pointer = _return.pointer, memory = _return.memory), command)
+      (output.headOption, amplifier.copy(pointer = _return.state.pointer, memory = _return.state.memory), command)
     }
 
     @tailrec
@@ -57,15 +57,15 @@ object Day7 extends App {
       }
     }
 
-    loop(0, init(amplifiers))._1
+    loop(0L, init(amplifiers))._1
   }
 
   def findMax(input: String, possiblePhases: List[Phase]): Value = {
-    val memory = Day5.parseMemory(input)
+    val memory = IntcodeComputer.parseMemory(input)
 
     possiblePhases
       .permutations
-      .map(perm => perm.map(phase => Amplifier(phase, 0, memory)))
+      .map(perm => perm.map(phase => Amplifier(phase, 0L, memory)))
       .map(run)
       .max
   }
