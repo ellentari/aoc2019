@@ -1,18 +1,11 @@
 package aoc
 
+import aoc.Data._
 import aoc.util.Resources
 
 object Day3 extends App {
 
-  sealed trait Direction
-  case object Up    extends Direction
-  case object Down  extends Direction
-  case object Left  extends Direction
-  case object Right extends Direction
-
   case class Move(d: Int, direction: Direction)
-
-  case class Point(x: Int, y: Int)
 
   def parse(input: List[String]): (List[Move], List[Move]) = {
     val right = "R(\\d+)".r

@@ -1,12 +1,12 @@
 package aoc
 
-import aoc.util.IntcodeComputer.{Memory, Output, Value}
+import aoc.util.IntcodeComputer.{Memory, Output, ProgramState, Value, programInput}
 import aoc.util.{IntcodeComputer, Resources}
 
 object Day5 extends App {
 
   def runProgram(memory: Memory, input: Value): Output =
-    IntcodeComputer.runProgram(memory, () => Some(input))._2
+    IntcodeComputer.runProgram(programInput(input), ProgramState(memory))._2
 
   def part1(memory: Memory): Value = {
     runProgram(memory, 1L).last

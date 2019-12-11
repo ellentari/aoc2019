@@ -36,8 +36,8 @@ object IntcodeComputer {
   case object Exit  extends ReturnCode
   case object Block extends ReturnCode
 
-  case class State(pointer: Address, memory: Memory, relativeBase: Address)
-  case class Return(code: ReturnCode, state: State)
+  case class ProgramState(memory: Memory, pointer: Address = 0L, relativeBase: Address = 0L)
+  case class Return(code: ReturnCode, state: ProgramState)
 
   type Output = List[Value]
 
@@ -47,34 +47,34 @@ object IntcodeComputer {
       .zipWithIndex
       .map(kv => (kv._2.toLong, kv._1))
       .toMap
-      .withDefault(k => if (k >= 0) 0L else throw new NoSuchElementException)
+      .withDefault(k => if (k >= 0) 0L else throw new NoSuchElementException(k.toString))
 
-  def runProgram(memory: Memory, input: GetInput, start: Address = 0L): (Return, Output) = {
+  def runProgram(input: GetInput, state: ProgramState): (Return, Output) = {
     val output = mutable.ArrayBuffer[Value]()
-    val after  = runLoop(start, memory, input, output.addOne)
+    val after  = runLoop(state, input, output.addOne)
     (after, output.toList)
   }
 
-  private def runLoop(initial: Address, memory: Memory, input: GetInput, output: MkOutput): Return = {
+  private def runLoop(state: ProgramState, input: GetInput, output: MkOutput): Return = {
 
-    def eval(state: State, param: Param): Value = param match {
+    def eval(state: ProgramState, param: Param): Value = param match {
       case Immediate(value)  => value
       case Position(address) => state.memory(address)
       case Relative(address) => state.memory(state.relativeBase + address)
     }
 
-    def evalWritePosition(state: State, param: Param): Address = param match {
+    def evalWritePosition(state: ProgramState, param: Param): Address = param match {
       case Position(address) => address
       case Relative(address) => state.relativeBase + address
     }
 
-    def write(value: Value, state: State, target: Param): Memory = {
+    def write(value: Value, state: ProgramState, target: Param): Memory = {
       val address = evalWritePosition(state, target)
       state.memory.updated(address, value)
     }
 
     @tailrec
-    def loop(state: State): Return = {
+    def loop(state: ProgramState): Return = {
       val pointer      = state.pointer
       val memory       = state.memory
 
@@ -115,7 +115,7 @@ object IntcodeComputer {
       }
     }
 
-    loop(State(initial, memory, 0L))
+    loop(state)
   }
 
   private def getInstruction(memory: Memory, pointer: Address): Instruction = {
@@ -146,4 +146,10 @@ object IntcodeComputer {
       case 9  => RelBaseOffset(param(1))
     }
   }
+
+  def programInput(values: Value*): GetInput = {
+    val iterator = values.iterator
+    () => if (iterator.hasNext) Some(iterator.next()) else None
+  }
+
 }

@@ -1,6 +1,6 @@
 package aoc
 
-import aoc.util.IntcodeComputer.{Memory, Value}
+import aoc.util.IntcodeComputer.{Memory, ProgramState, Value}
 import aoc.util.{IntcodeComputer, Resources}
 
 object Day9 extends App {
@@ -12,7 +12,7 @@ object Day9 extends App {
     run(memory, 2)
 
   private def run(memory: Memory, input: Int): Value =
-    IntcodeComputer.runProgram(memory, () => Some(input))._2.head
+    IntcodeComputer.runProgram(IntcodeComputer.programInput(input), ProgramState(memory))._2.head
 
   private val input = IntcodeComputer.parseMemory(Resources.string("day9.txt"))
 

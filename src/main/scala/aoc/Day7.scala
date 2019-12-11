@@ -31,12 +31,9 @@ object Day7 extends App {
       }
 
     def run(amplifier: Amplifier, input: Value): (Option[Value], Amplifier, Feedback) = {
-      val inputs = List(input).iterator
-
       val (_return, output) = IntcodeComputer.runProgram(
-        amplifier.memory,
-        () => if (inputs.hasNext) Some(inputs.next()) else None,
-        amplifier.pointer
+        programInput(input),
+        ProgramState(amplifier.memory, amplifier.pointer)
       )
 
       val command = _return.code match {
