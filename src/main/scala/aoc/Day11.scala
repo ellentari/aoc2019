@@ -42,13 +42,6 @@ object Day11 extends App {
         }
     }
 
-    def move(point: Point, direction: Direction) = direction match {
-      case Right => point.copy(x = point.x + 1)
-      case Left  => point.copy(x = point.x - 1)
-      case Up    => point.copy(y = point.y + 1)
-      case Down  => point.copy(y = point.y - 1)
-    }
-
     @tailrec
     def loop(point: Point, direction: Direction, grid: Map[Point, Color], state: ProgramState): Map[Point, Color] = {
       val color = grid.getOrElse(point, Black)
@@ -73,7 +66,7 @@ object Day11 extends App {
       val nextGrid = grid.updated(point, colorToPaint)
 
       val nextDirection = turn(direction, toTurn)
-      val nextPoint     = move(point, nextDirection)
+      val nextPoint     = movePoint(point, nextDirection, 1)
 
       programReturn.code match {
         case Exit  => grid
