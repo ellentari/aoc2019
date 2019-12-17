@@ -1,7 +1,7 @@
 package aoc
 
 import aoc.Data.{Direction, Point}
-import aoc.util.IntcodeComputer.{GetInput, Memory, ProgramState, Return, Value}
+import aoc.util.IntcodeComputer.{GetInput, Memory, ProgramState, Return, Value, noInput}
 import aoc.util.{IntcodeComputer, Resources}
 
 import scala.annotation.tailrec
@@ -69,7 +69,7 @@ object Day13 extends App {
     getScore(finalTiles)
   }
 
-  private def run(programState: ProgramState, getInput: GetInput = () => None): (ProgramState, GameState) = {
+  private def run(programState: ProgramState, getInput: GetInput = noInput): (ProgramState, GameState) = {
     def tile(v: Value): Tile = v match {
       case 0 => Empty
       case 1 => Wall

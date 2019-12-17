@@ -152,4 +152,7 @@ object IntcodeComputer {
     () => if (iterator.hasNext) Some(iterator.next()) else None
   }
 
+  def noInput: GetInput =
+    () => None
+
 }

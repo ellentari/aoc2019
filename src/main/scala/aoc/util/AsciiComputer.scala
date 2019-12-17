@@ -1,15 +1,21 @@
 package aoc.util
 
-import aoc.util.IntcodeComputer.{ProgramState, Return, Value, programInput}
+import aoc.util.IntcodeComputer.{Output, ProgramState, Return, Value, programInput}
 
 object AsciiComputer {
 
-  def runProgram(state: ProgramState, input: Option[String] = None): (ProgramState, String) = {
-    def toAscii(s: String): Seq[Value] =
-      s.toCharArray.map(_.toLong)
-
+  def runProgramToString(state: ProgramState, input: Option[String] = None): (ProgramState, String) = {
     def fromAscii(vs: List[Value]): String =
       new String(vs.map(_.toChar).toArray)
+
+    val (nextState, output) = runProgram(state, input)
+
+    (nextState, fromAscii(output))
+  }
+
+  def runProgram(state: ProgramState, input: Option[String] = None): (ProgramState, Output) = {
+    def toAscii(s: String): Seq[Value] =
+      s.toCharArray.map(_.toLong)
 
     val downstreamInput = input
       .map(i => programInput(toAscii(i + "\n"): _*))
@@ -17,7 +23,7 @@ object AsciiComputer {
 
     val (Return(_, nextState), output) = IntcodeComputer.runProgram(downstreamInput, state)
 
-    (nextState, fromAscii(output))
+    (nextState, output)
   }
 
 }

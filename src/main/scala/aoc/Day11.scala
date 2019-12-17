@@ -25,22 +25,6 @@ object Day11 extends App {
   }
 
   private def paint(program: Memory, initial: Color): Map[Point, Color] = {
-    def turn(current: Direction, turn: Direction) = turn match {
-      case Left =>
-        current match {
-          case Up    => Left
-          case Left  => Down
-          case Down  => Right
-          case Right => Up
-        }
-      case Right =>
-        current match {
-          case Up    => Right
-          case Right => Down
-          case Down  => Left
-          case Left  => Up
-        }
-    }
 
     @tailrec
     def loop(point: Point, direction: Direction, grid: Map[Point, Color], state: ProgramState): Map[Point, Color] = {
@@ -58,15 +42,13 @@ object Day11 extends App {
         case 1 => White
       }
 
-      val toTurn = second match {
-        case 0 => Left
-        case 1 => Right
+      val nextDirection = second match {
+        case 0 => turnLeft(direction)
+        case 1 => turnRight(direction)
       }
 
-      val nextGrid = grid.updated(point, colorToPaint)
-
-      val nextDirection = turn(direction, toTurn)
-      val nextPoint     = movePoint(point, nextDirection, 1)
+      val nextGrid  = grid.updated(point, colorToPaint)
+      val nextPoint = movePoint(point, nextDirection, 1)
 
       programReturn.code match {
         case Exit  => grid

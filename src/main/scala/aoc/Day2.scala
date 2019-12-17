@@ -19,7 +19,7 @@ object Day2 extends App {
 
   def run(initialMemory: Memory, noun: Value, verb: Value): Value = {
     val memory = initialMemory.updated(1L, noun).updated(2L, verb)
-    val (Return(_, state), _) = IntcodeComputer.runProgram(() => None, ProgramState(memory))
+    val (Return(_, state), _) = runProgram(noInput, ProgramState(memory))
     state.memory(0L)
   }
 

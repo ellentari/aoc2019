@@ -97,7 +97,7 @@ object Day25 extends App {
       ProgramOutput(finalLocation, secured, output)
     }
 
-    val (nextState, output) = AsciiComputer.runProgram(programState, input.map(instructionToString))
+    val (nextState, output) = AsciiComputer.runProgramToString(programState, input.map(instructionToString))
 
     (nextState, parseProgramOutput(output))
   }

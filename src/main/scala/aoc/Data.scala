@@ -19,7 +19,25 @@ object Data {
     case Right => point.copy(x = point.x + d)
   }
 
-  def makeGrid[A](input: Seq[String])(mkCell: Char => A): Grid[A] = {
+  def turnLeft(direction: Direction): Direction = direction match {
+      case Up => Left
+      case Left => Down
+      case Down => Right
+      case Right => Up
+    }
+
+  def turnRight(direction: Direction): Direction = direction match {
+    case Up => Right
+    case Right => Down
+    case Down => Left
+    case Left => Up
+  }
+
+  def makeGridFromStrings[A](input: Seq[String])(mkCell: Char => A): Grid[A] = {
+    makeGrid[Char, A](input.map(_.toCharArray))(mkCell)
+  }
+
+  def makeGrid[V, A](input: Seq[Seq[V]])(mkCell: V => A): Grid[A] = {
     (for {
       (row, y) <- input.view.zipWithIndex
       (ch, x)  <- row.view.zipWithIndex
