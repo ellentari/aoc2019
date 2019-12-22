@@ -3,7 +3,6 @@ package aoc
 import aoc.util.Resources
 
 import scala.annotation.tailrec
-import scala.collection.immutable.Queue
 
 object Day6 extends App {
 
@@ -13,6 +12,8 @@ object Day6 extends App {
 
   case class Edge(orbit: Planet, inOrbit: Planet)
   case class Graph(inOrbit: Map[Planet, List[Planet]], orbit: Map[Planet, Planet])
+
+  case class Move(planet: Planet, distance: Distance)
 
   def part1(edges: List[Edge]): Orbits = {
     @tailrec
@@ -34,26 +35,18 @@ object Day6 extends App {
   }
 
   def part2(edges: List[Edge]): Distance = {
-    @tailrec
-    def traverse(graph: Graph, queue: Queue[(Planet, Distance)], seen: Set[Planet], target: Planet): Option[Distance] =
-      queue.dequeueOption match {
-        case None => None
-        case Some(((current, count), remaining)) =>
-          if (current == target) Some(count)
-          else {
-            val adjacent = graph.orbit.get(current).toList ++ graph.inOrbit(current)
-            val toVisit  = adjacent withFilter (!seen.contains(_)) map ((_, count + 1))
-
-            traverse(graph, remaining.appendedAll(toVisit), seen + current, target)
-          }
-      }
-
     val graph = makeGraph(edges)
+
+    def next(cur: Move): List[Move] = {
+      val adjacent = graph.orbit.get(cur.planet).toList ++ graph.inOrbit(cur.planet)
+
+      adjacent map (Move(_, cur.distance + 1))
+    }
 
     val start       = graph.orbit("YOU")
     val destination = graph.orbit("SAN")
 
-    traverse(graph, Queue(start -> 0), Set("YOU"), destination).get
+    Search.runBFS(List(Move(start, 0)))(next)(_.planet == destination)(_.planet).toOption.get.distance
   }
 
   def parseEdge(edge: String): Edge =
