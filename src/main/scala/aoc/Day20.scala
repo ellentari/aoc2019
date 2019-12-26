@@ -1,7 +1,7 @@
 package aoc
 
-import aoc.Data._
-import aoc.util.Resources
+import aoc.util.Data._
+import aoc.util.{Resources, Search}
 
 object Day20 extends App {
 

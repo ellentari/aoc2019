@@ -2,7 +2,7 @@ package aoc
 
 import java.lang.Math.pow
 
-import aoc.Data._
+import aoc.util.Data._
 import aoc.util.Resources
 
 import scala.annotation.tailrec

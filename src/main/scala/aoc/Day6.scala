@@ -1,6 +1,6 @@
 package aoc
 
-import aoc.util.Resources
+import aoc.util.{Resources, Search}
 
 import scala.annotation.tailrec
 

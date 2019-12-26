@@ -1,6 +1,6 @@
 package aoc
 
-import Data._
+import aoc.util.Data._
 import aoc.util.IntcodeComputer._
 import aoc.util.{IntcodeComputer, Resources}
 

@@ -1,4 +1,4 @@
-package aoc
+package aoc.util
 
 import scala.annotation.tailrec
 import scala.collection.immutable.Queue

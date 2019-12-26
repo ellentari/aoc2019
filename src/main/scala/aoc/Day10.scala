@@ -1,6 +1,6 @@
 package aoc
 
-import aoc.Data.Point
+import aoc.util.Data.Point
 import aoc.util.Resources
 
 import scala.annotation.tailrec

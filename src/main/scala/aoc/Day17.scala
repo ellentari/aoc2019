@@ -1,8 +1,8 @@
 package aoc
 
-import aoc.Data._
+import aoc.util.Data._
 import aoc.util.IntcodeComputer._
-import aoc.util.{AsciiComputer, Resources}
+import aoc.util.{AsciiComputer, Data, Resources}
 
 import scala.annotation.tailrec
 

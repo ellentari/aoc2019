@@ -1,6 +1,6 @@
 package aoc
 
-import aoc.Data.{Direction, Point}
+import aoc.util.Data.{Direction, Point}
 import aoc.util.IntcodeComputer.{GetInput, Memory, ProgramState, Return, Value, noInput}
 import aoc.util.{IntcodeComputer, Resources}
 

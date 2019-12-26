@@ -1,6 +1,6 @@
 package aoc
 
-import aoc.Search.runBFS
+import aoc.util.Search.runBFS
 import aoc.util.IntcodeComputer._
 import aoc.util.{AsciiComputer, Resources}
 

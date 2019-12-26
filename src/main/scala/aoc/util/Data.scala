@@ -1,4 +1,4 @@
-package aoc
+package aoc.util
 
 object Data {
 

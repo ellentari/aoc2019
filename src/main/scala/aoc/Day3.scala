@@ -1,6 +1,6 @@
 package aoc
 
-import aoc.Data._
+import aoc.util.Data._
 import aoc.util.Resources
 
 object Day3 extends App {

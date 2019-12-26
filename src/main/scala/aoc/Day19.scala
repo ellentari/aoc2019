@@ -1,6 +1,6 @@
 package aoc
 
-import aoc.Data.Point
+import aoc.util.Data.Point
 import aoc.util.IntcodeComputer._
 import aoc.util.Resources
 
