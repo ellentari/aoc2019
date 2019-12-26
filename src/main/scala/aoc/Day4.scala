@@ -23,24 +23,25 @@ object Day4 extends App {
         case a :: b :: c :: d :: Nil => a != b && b == c && c != d
       }
 
-  def countPasswords(isGood: Digits => Boolean)(from: Int, to: Int) = {
-    def digits(num: Int) = num.toString.map(ch => ch - '0').toList
+  def countPasswords(isGood: Digits => Boolean)(from: Int, to: Int): Int = {
+    def digits(num: Int): Digits =
+      num.toString.map(_ - '0').toList
 
     (from to to)
       .map(digits)
       .count(isGood)
   }
 
-  def part1: (Int, Int) => Int = {
-    def isGood(digits: Digits) = allIncrease(digits) && twoAdjacent(digits)
+  def part1(from: Int, to: Int): Int = {
+    def isGood(digits: Digits): Boolean = allIncrease(digits) && twoAdjacent(digits)
 
-    countPasswords(isGood)
+    countPasswords(isGood)(from, to)
   }
 
-  def part2: (Int, Int) => Int = {
-    def isGood(digits: Digits) = allIncrease(digits) && exactlyTwoAdjacent(digits)
+  def part2(from: Int, to: Int): Int = {
+    def isGood(digits: Digits): Boolean = allIncrease(digits) && exactlyTwoAdjacent(digits)
 
-    countPasswords(isGood)
+    countPasswords(isGood)(from, to)
   }
 
   println(part1(178416, 676461))
