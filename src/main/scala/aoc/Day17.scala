@@ -22,14 +22,9 @@ object Day17 extends App {
   type Path    = List[Move]
 
   private def readMap(memory: Memory): AreaMap = {
-    def splitAt(values: List[Value], value: Value): List[List[Value]] =
-      if (values.isEmpty) Nil
-      else {
-        val (before, after) = values.span(_ != value)
-        before :: splitAt(after.tail, value)
-      }
+    val (_, output) = AsciiComputer.runProgramToString(ProgramState(memory), None)
 
-    def decode(value: Value) = value.toChar match {
+    makeGrid(output.split("\n")) {
       case '#' => Scaffold
       case '.' => Empty
       case '^' => Robot(Up)
@@ -37,20 +32,16 @@ object Day17 extends App {
       case '<' => Robot(Data.Left)
       case 'v' => Robot(Down)
     }
-
-    val (_, output) = runProgram(noInput, ProgramState(memory))
-
-    Data.makeGrid(splitAt(output, 10L))(decode)
   }
+
+  private def findRobot(map: AreaMap): Option[(Point, Robot)] =
+    map.collectFirst {
+      case (p, Robot(d)) => (p, Robot(d))
+    }
 
   private def getRobotPath(map: AreaMap): Path = {
 
     case class Segment(p: Point, d: Direction, m: Move, stepsForward: Int)
-
-    def findRobot(map: AreaMap): Option[(Point, Robot)] =
-      map.collectFirst {
-        case (p, Robot(d)) => (p, Robot(d))
-      }
 
     def tryMove(point: Point, direction: Direction): Option[(Point, Direction)] = {
       val next = point + (direction match {
@@ -121,7 +112,7 @@ object Day17 extends App {
 
     val (a, pathLeft1) = findGroup(stringPath)
     val (b, pathLeft2) = findGroup(pathLeft1)
-    val (c, _) = findGroup(pathLeft2)
+    val (c, _)         = findGroup(pathLeft2)
 
     (a, b, c)
   }
@@ -130,15 +121,13 @@ object Day17 extends App {
     def isIntersection(point: Point, map: AreaMap): Boolean =
       (point :: map.adjacent(point))
         .map(map.getOrElse(_, Empty))
-        .forall {
-          case Scaffold => true
-          case Robot(_) => true
-          case _        => false
-        }
+        .forall(_ == Scaffold)
 
-    val map = readMap(input)
+    val map             = readMap(input)
+    val (robotPoint, _) = findRobot(map).get
 
-    map.keys
+    map.updated(robotPoint, Scaffold)
+      .keys
       .filter(isIntersection(_, map))
       .map(p => p.x * p.y)
       .sum
@@ -154,7 +143,6 @@ object Day17 extends App {
       }.mkString(",")
 
     def splitInput(stringPath: String): (String, (String, String, String)) = {
-      //    ("L,10,L,6,R,10", "R,6,R,8,R,8,L,6,R,8", "L,10,R,8,R,8,L,10")
       val (a, b, c) = findGroups(stringPath)
 
       val compressed = stringPath
@@ -184,8 +172,7 @@ object Day17 extends App {
 
   private val input = parseMemory(Resources.string("day17.txt"))
 
-  println(part1(input)) //9876
-  //L,10,L,6,R,10,R,6,R,8,R,8,L,6,R,8,L,10,L,6,R,10,L,10,R,8,R,8,L,10,R,6,R,8,R,8,L,6,R,8,L,10,R,8,R,8,L,10,R,6,R,8,R,8,L,6,R,8,L,10,L,6,R,10,L,10,R,8,R,8,L,10,R,6,R,8,R,8,L,6,R,8
-  println(part2(input)) //1234055
+  println(part1(input))
+  println(part2(input))
 
 }

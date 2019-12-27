@@ -152,7 +152,7 @@ object Day24 extends App {
   }
 
   def parseGrid(input: List[String]): Grid[Cell] =
-    makeGridFromStrings(input) {
+    makeGrid(input) {
       case '.' => Empty
       case '#' => Bug
     }

@@ -19,7 +19,7 @@ object Day18 extends App {
   case class Move(point: Point, steps: Int, collected: Keys)
 
   def parseMaze(input: List[String]): Maze =
-    makeGridFromStrings(input) {
+    makeGrid(input) {
       case '#'            => Wall
       case '.'            => Empty
       case '@'            => Entry
