@@ -5,9 +5,6 @@ import aoc.util.IntcodeComputer.{Output, ProgramState, Return, Value, programInp
 object AsciiComputer {
 
   def runProgramToString(state: ProgramState, input: Option[String] = None): (ProgramState, String) = {
-    def fromAscii(vs: List[Value]): String =
-      new String(vs.map(_.toChar).toArray)
-
     val (nextState, output) = runProgram(state, input)
 
     (nextState, fromAscii(output))
@@ -25,5 +22,8 @@ object AsciiComputer {
 
     (nextState, output)
   }
+
+  def fromAscii(vs: List[Value]): String =
+    new String(vs.map(_.toChar).toArray)
 
 }

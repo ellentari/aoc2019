@@ -1,7 +1,8 @@
 package aoc
 
+import aoc.util.AsciiComputer.fromAscii
 import aoc.util.IntcodeComputer._
-import aoc.util.Resources
+import aoc.util.{AsciiComputer, Resources}
 
 object Day21 extends App {
 
@@ -28,27 +29,17 @@ object Day21 extends App {
   case object Run                                  extends SpringInstruction
 
   def run(program: Memory, instructions: List[SpringInstruction]): String = {
-    def instructionToString(instruction: SpringInstruction): String = instruction match {
+    def toString(instruction: SpringInstruction): String = instruction match {
       case And(x, y) => s"AND $x $y"
-      case Or(x, y) => s"OR $x $y"
+      case Or(x, y)  => s"OR $x $y"
       case Not(x, y) => s"NOT $x $y"
-      case Walk => "WALK"
-      case Run => "RUN"
+      case Walk      => "WALK"
+      case Run       => "RUN"
     }
 
-    def toAscii(s: String): Array[Value] =
-      s.toCharArray.map(_.toLong)
+    val input = instructions.map(toString).mkString("\n")
 
-    def fromAscii(out: List[Value]): String =
-      new String(out.map(_.toChar).toArray)
-
-    val input = instructions.view
-      .map(instructionToString)
-      .map(_ + "\n")
-      .flatMap(toAscii)
-      .toList
-
-    val (_, output) = runProgram(programInput(input: _*), ProgramState(program))
+    val (_, output) = AsciiComputer.runProgram(ProgramState(program), Some(input))
 
     if (output.last > Byte.MaxValue) output.last.toString
     else fromAscii(output)
