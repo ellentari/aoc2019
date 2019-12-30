@@ -44,7 +44,7 @@ object Day16 extends App {
       else {
 
         for {
-          i <- Range(previous.size - 2, previous.size / 2, -1)
+          i <- previous.size - 2 until previous.size / 2 by -1
         } buffer(i) = (previous(i) + buffer(i + 1)) % 10
 
         loop(buffer, buffer.toIndexedSeq, phase + 1)
